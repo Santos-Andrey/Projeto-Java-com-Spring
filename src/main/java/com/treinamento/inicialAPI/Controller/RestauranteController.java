@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.HeadersBuilder;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -72,15 +73,9 @@ public class RestauranteController {
 	
 	@PatchMapping("/{RestauranteId}")
 	public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos){
-		Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
+		Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
 		
-		if(restauranteAtual == null) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		merge(campos, restauranteAtual);
-		
-		return atualizar(restauranteId, restauranteAtual);
+		return ((HeadersBuilder<?>) ResponseEntity.ok(restauranteId)).build();
 		
 	}
 
