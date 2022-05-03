@@ -22,7 +22,7 @@ import com.treinamento.inicialAPI.domain.model.repository.RestauranteRepository;
 import com.treinamento.inicialAPI.domain.model.repository.RestauranteRepositoryQueries;
 
 @Repository
-public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
+public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries{
 
 	
 	
