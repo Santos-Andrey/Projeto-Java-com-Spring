@@ -1,5 +1,7 @@
 package com.treinamento.inicialAPI.domain.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,18 +23,18 @@ public class CadastroCidadeService {
 	
 	public Cidade salvar(Cidade cidade) {
 		Long Estadoid = cidade.getEstado().getId();
-		Estado estado = estadoRepository.buscar(Estadoid);
+		List<Estado> estado = estadoRepository.findAll();
 		
 		if(estado == null) {
 			throw new EntidadeNaoEncontradaException(String.format("Esta entidade %d não foi encontrada!", Estadoid));
 		}
-			cidade.setEstado(estado);
+			cidade.setEstado((Estado) estado);
 			return cidadeRespository.save(cidade);
 	}
 	
 	public void excluir(Long cidadeId) {
 		try {
-			return cidadeRespository.deleteById(cidadeId);
+			cidadeRespository.deleteById(cidadeId);
 			
 		}catch(EntidadeEmUsoException e) {
 			throw new EntidadeEmUsoException(String.format("Esta entidade %d está em uso!", cidadeId));
