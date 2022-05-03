@@ -24,9 +24,7 @@ public class CidadeController {
 	@GetMapping
 	public List<Cidade> listar(){
 		return cidadeRepository.findAll();
-	
 	}
-	
 	@GetMapping
 	public ResponseEntity<Cidade> buscar(@PathVariable Long Cidadeid){
 		Optional<Cidade> cidade = cidadeRepository.findById(Cidadeid);
