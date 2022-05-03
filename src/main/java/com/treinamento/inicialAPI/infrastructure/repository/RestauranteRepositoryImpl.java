@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -13,15 +12,23 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import com.treinamento.inicialAPI.domain.model.Restaurante;
+import com.treinamento.inicialAPI.domain.model.repository.RestauranteRepository;
 import com.treinamento.inicialAPI.domain.model.repository.RestauranteRepositoryQueries;
 
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 
+	
+	
+	@Autowired @Lazy
+	private RestauranteRepository restauranteRepository;
+	
 	@PersistenceContext
 	private EntityManager manager;
 	
@@ -54,12 +61,17 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 		
 		TypedQuery<Restaurante> query = manager.createQuery(criteria);
 					return query.getResultList();
+	}
+
+	@Override
+	public List<Restaurante> findComFreteGratis(String nome) {
+		return restauranteRepository.findAll(comFreteGratis()
+				.add(comNomeSemelhante(nome)));
 	
 	}
-	
 }
 
-//exemplo de consulta(querys) dinamica com jpql
+//ex emplo de consulta(querys) dinamica com jpql
 		/*
 		var jpql = new StringBuilder();
 				jpql.append("from Restaurante where 0 = 0 ");
