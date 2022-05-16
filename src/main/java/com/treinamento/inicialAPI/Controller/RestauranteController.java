@@ -86,7 +86,7 @@ public class RestauranteController {
 	//Reflection para juntar os valores
 	//forEach como ciclo de repetição
 	
-	private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino) {
+	/*private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		Restaurante restauranteOrigem = objectMapper.convertValue(camposOrigem, Restaurante.class);
 		
@@ -100,7 +100,7 @@ public class RestauranteController {
 			//System.out.println(nomePropriedade + "=" + valorPropriedade + "=" + novoValor);
 			
 			ReflectionUtils.setField(field, restauranteDestino, novoValor);
-		});
+		});*/
 	}
 	
-}
+

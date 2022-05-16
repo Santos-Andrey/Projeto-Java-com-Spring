@@ -23,8 +23,6 @@ import com.treinamento.inicialAPI.domain.model.repository.RestauranteRepositoryQ
 
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries{
-
-	
 	
 	@Autowired @Lazy
 	private RestauranteRepository restauranteRepository;
@@ -65,11 +63,16 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries{
 
 	@Override
 	public List<Restaurante> findComFreteGratis(String nome) {
-		return restauranteRepository.findAll(comFreteGratis()
-				.add(comNomeSemelhante(nome)));
+		return null;
+	}
+
+	//@Override
+	//public List<Restaurante> findComFreteGratis(String nome) {
+		//return restauranteRepository.findAll(comFreteGratis().add(comNomeSemelhante(nome)));
 	
 	}
-}
+
+//}
 
 //ex emplo de consulta(querys) dinamica com jpql
 		/*
