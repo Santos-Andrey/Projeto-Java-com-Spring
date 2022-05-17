@@ -29,6 +29,7 @@ public class Cozinha {
 	@Column(name = "Nome_Cozinha", nullable = false)
 	private String nome;
 	
+	
 	//Implementando mapeamento Bi Direcional com OneToMany e utilizando JsonIgnore para impedir ciclos infinitos
 	@JsonIgnore
 	@OneToMany(mappedBy = "cozinha")
