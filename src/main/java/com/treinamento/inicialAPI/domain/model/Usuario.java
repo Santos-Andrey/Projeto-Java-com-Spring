@@ -1,6 +1,8 @@
 package com.treinamento.inicialAPI.domain.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,6 +46,6 @@ public class Usuario {
 	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "Grupos_usuario")
-	private Grupos grupos;
+	private List<Grupos> grupos = new ArrayList<>();
 	
 }

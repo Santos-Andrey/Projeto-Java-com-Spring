@@ -1,5 +1,8 @@
 package com.treinamento.inicialAPI.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,7 +31,7 @@ public class Grupos {
 	
 	@JsonIgnore
 	@ManyToMany
-	@JoinTable(name = "Permissões_Grupo")
-	private Permissao permissoes;
+	@JoinTable(name = "grupo_permissoes")
+	private List<Permissao> permissoes = new ArrayList<>();
 	
 }

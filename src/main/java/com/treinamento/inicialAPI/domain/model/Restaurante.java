@@ -71,9 +71,9 @@ public class Restaurante {
 	@Embedded
 	private Endereco endereco;
 	
+	@OneToMany 
 	@JsonIgnore
-	@OneToMany
 	@JoinTable(name = "produtos")
-	private Produto produto;
+	private List<Produto> produto = new ArrayList<>();
 	
 }

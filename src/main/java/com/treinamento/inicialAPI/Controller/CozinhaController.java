@@ -33,7 +33,7 @@ public class CozinhaController {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
 	
-	@GetMapping
+	@GetMapping("/listar")
 	public List <Cozinha> listar(){
 		return cozinhaRepository.findAll();
 	}

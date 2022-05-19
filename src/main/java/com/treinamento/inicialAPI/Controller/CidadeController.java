@@ -21,11 +21,11 @@ public class CidadeController {
 	@Autowired
 	private CidadeRepository cidadeRepository;
 	
-	@GetMapping
+	@GetMapping("/listar")
 	public List<Cidade> listar(){
 		return cidadeRepository.findAll();
 	}
-	@GetMapping
+	@GetMapping("/listar_id")
 	public ResponseEntity<Cidade> buscar(@PathVariable Long Cidadeid){
 		Optional<Cidade> cidade = cidadeRepository.findById(Cidadeid);
 		
