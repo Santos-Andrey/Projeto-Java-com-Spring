@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.treinamento.inicialAPI.domain.exception.EntidadeEmUsoException;
 import com.treinamento.inicialAPI.domain.exception.EntidadeNaoEncontradaException;
 import com.treinamento.inicialAPI.domain.model.Cozinha;
 import com.treinamento.inicialAPI.domain.model.repository.CozinhaRepository;
@@ -52,7 +52,7 @@ public class CozinhaController {
 	
 	}
 	//Metodo para adicionar
-	@PostMapping
+	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cozinha adicionar(@RequestBody Cozinha cozinha) {
 		return cadastroCozinha.salvar(cozinha);
@@ -73,21 +73,35 @@ public class CozinhaController {
 		return ResponseEntity.notFound().build();
 	}
 	
-	@DeleteMapping("/{cozinhaId}")
-	public ResponseEntity<Cozinha> deletar(@PathVariable Long cozinhaId){
+	//@DeleteMapping("/{cozinhaId}")
+	//public ResponseEntity<?> deletar(@PathVariable Long cozinhaId){
 	
-		try {
-				cadastroCozinha.excluir(cozinhaId);
-				return ResponseEntity.noContent().build();
+		//try {
+			//	cadastroCozinha.excluir(cozinhaId);
+				//return ResponseEntity.noContent().build();
 				
-		}catch(EntidadeNaoEncontradaException e) {
-			return ResponseEntity.noContent().build(); 
+//}catch(EntidadeNaoEncontradaException e) {
+//return ResponseEntity.notFound().build(); 
 		
-		}catch (EntidadeEmUsoException e) {
-				return ResponseEntity.status(HttpStatus.CONFLICT).build();
+	//}catch (EntidadeEmUsoException e) {
+		//return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 				
+		//}
+			
+//}		
+	
+		@DeleteMapping("/{cozinhaId}")
+		@ResponseStatus(HttpStatus.NO_CONTENT)
+		public void remover(@PathVariable Long cozinhaId){
+			
+			try {
+				cadastroCozinha.excluir(cozinhaId);
+			
+			}catch(EntidadeNaoEncontradaException e) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, 
+					String.format("Não existe um cadastro de cozinha com código %d", cozinhaId));
 			}
 			
-	}		
+	}
 	
 }
