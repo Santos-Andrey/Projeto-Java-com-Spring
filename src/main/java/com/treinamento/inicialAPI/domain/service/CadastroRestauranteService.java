@@ -7,7 +7,6 @@ import com.treinamento.inicialAPI.domain.exception.EntidadeEmUsoException;
 import com.treinamento.inicialAPI.domain.exception.EntidadeNaoEncontradaException;
 import com.treinamento.inicialAPI.domain.model.Cozinha;
 import com.treinamento.inicialAPI.domain.model.Restaurante;
-import com.treinamento.inicialAPI.domain.model.repository.CozinhaRepository;
 import com.treinamento.inicialAPI.domain.model.repository.RestauranteRepository;
 
 @Service
@@ -20,20 +19,18 @@ public class CadastroRestauranteService {
 	private RestauranteRepository restauranteRepository;
 	
 	@Autowired
-	private CozinhaRepository cozinhaRepository;
+	private CadastroCozinhaService cadastroCozinha;
 	
 	@Autowired
 	CadastroRestauranteService cadastroRestaurante;
 	
 	public Restaurante salvar(Restaurante restaurante) {
-		
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(()-> new EntidadeNaoEncontradaException(
-					String.format(ENTIDADE_NÃO_ENCONTRADA_MSG, cozinhaId)));
+		
+		Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId); 
+		
 		
 		restaurante.setCozinha(cozinha);
-		
 		return restauranteRepository.save(restaurante);
 	}
 	
@@ -43,6 +40,7 @@ public class CadastroRestauranteService {
 		
 		}catch (EntidadeNaoEncontradaException e) {
 			throw new EntidadeNaoEncontradaException(ENTIDADE_NÃO_ENCONTRADA_MSG);
+			
 		}catch (EntidadeEmUsoException e) {
 			throw new EntidadeEmUsoException(String.format(ENTIDADE_EM_USO, restauranteId));
 		}

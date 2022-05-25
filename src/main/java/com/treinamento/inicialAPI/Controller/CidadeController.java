@@ -51,7 +51,7 @@ public class CidadeController {
 		
 		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 		return cidadeRepository.save(cidadeAtual);
-	}
+	} 
 
 	@DeleteMapping("/{cidadeId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

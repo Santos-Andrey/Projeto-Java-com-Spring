@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.treinamento.inicialAPI.domain.exception.EntidadeEmUsoException;
 import com.treinamento.inicialAPI.domain.exception.EntidadeNaoEncontradaException;
 import com.treinamento.inicialAPI.domain.model.Cidade;
+import com.treinamento.inicialAPI.domain.model.Estado;
 import com.treinamento.inicialAPI.domain.model.repository.CidadeRepository;
 
 @Service
@@ -16,9 +17,16 @@ public class CadastroCidadeService {
 	private static final String ENTIDADE_NÃO_ENCONTRADA_MSG = "Esta entidade %d não foi encontrada!";
 
 	@Autowired
+	private CadastroEstadoService cadastroEstado;
+	
+	@Autowired
 	private CidadeRepository cidadeRespository;
 	
 	public Cidade salvar(Cidade cidade) {
+		Long estadoId = cidade.getEstado().getId();
+		Estado estado = cadastroEstado.buscarOuFalhar(estadoId);
+		
+		cidade.setEstado(estado);
 		return cidadeRespository.save(cidade);
 	}
 	
