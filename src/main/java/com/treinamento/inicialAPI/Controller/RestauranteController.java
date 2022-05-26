@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.treinamento.inicialAPI.domain.exception.NegocioException;
+import com.treinamento.inicialAPI.domain.exception.RestauranteNaoEncontradoException;
 import com.treinamento.inicialAPI.domain.model.Restaurante;
 import com.treinamento.inicialAPI.domain.model.repository.RestauranteRepository;
 import com.treinamento.inicialAPI.domain.service.CadastroRestauranteService;
@@ -44,16 +46,27 @@ public class RestauranteController {
 	@PostMapping("/{adicionar}")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Restaurante adicionar(@RequestBody Restaurante restaurante){
-		return serviceRestaurante.salvar(restaurante);
 		
+		try {
+			return serviceRestaurante.salvar(restaurante);
+		
+		}catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
 	}
 	@PutMapping("/{RestauranteId}")
 	public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
-		Restaurante restauranteAtual = serviceRestaurante.buscarOuFalhar(restauranteId);
 		
+		Restaurante restauranteAtual = serviceRestaurante.buscarOuFalhar(restauranteId);
 		BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
-		return restauranteRepository.save(restauranteAtual);
-	}
+		
+		try {
+	     	return restauranteRepository.save(restauranteAtual);
+	     		
+		}catch(RestauranteNaoEncontradoException e) {
+	     	throw new NegocioException(e.getMessage(), e);
+	     		}
+		}
 	
 	@DeleteMapping("/{restauranteId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

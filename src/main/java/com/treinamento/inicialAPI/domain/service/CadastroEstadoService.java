@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.treinamento.inicialAPI.domain.exception.EntidadeEmUsoException;
 import com.treinamento.inicialAPI.domain.exception.EntidadeNaoEncontradaException;
+import com.treinamento.inicialAPI.domain.exception.EstadoNaoEncontradoException;
 import com.treinamento.inicialAPI.domain.model.Estado;
 import com.treinamento.inicialAPI.domain.model.repository.EstadoRepository;
 
@@ -12,7 +13,7 @@ import com.treinamento.inicialAPI.domain.model.repository.EstadoRepository;
 public class CadastroEstadoService {
 	
 	private static final String ENTIDADE_EM_USO_MSG = "Entidade %d em uso!";
-	private static final String ENTIDADE_NÃO_ENCONTRADA_MSG = "Entidade %d não encontrada";
+	
 	@Autowired
 	private EstadoRepository estadoRepository;
 	
@@ -20,20 +21,21 @@ public class CadastroEstadoService {
 		return estadoRepository.save(estado);
 	}
 	
-	public void Excluir(Long Estadoid) {
+	public void Excluir(Long estadoid) {
 		try {
-			estadoRepository.deleteById(Estadoid);
+			estadoRepository.deleteById(estadoid);
 			
 		}catch(EntidadeNaoEncontradaException e) {
-			throw new EntidadeNaoEncontradaException(String.format(ENTIDADE_NÃO_ENCONTRADA_MSG, Estadoid));
+			throw new EstadoNaoEncontradoException(estadoid);
 			
 		}catch(EntidadeEmUsoException e) {
-			throw new EntidadeEmUsoException(String.format(ENTIDADE_EM_USO_MSG, Estadoid));
+			throw new EntidadeEmUsoException(String.format(ENTIDADE_EM_USO_MSG, estadoid));
 		}
 	}
 	
 	public Estado buscarOuFalhar(Long estadoId) {
-		return estadoRepository.findById(estadoId).orElseThrow(() -> new EntidadeNaoEncontradaException(ENTIDADE_NÃO_ENCONTRADA_MSG));
+		return estadoRepository.findById(estadoId)
+				.orElseThrow(() -> new EstadoNaoEncontradoException(estadoId));
 	}
 	
 }

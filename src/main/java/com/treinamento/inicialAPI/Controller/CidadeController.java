@@ -1,4 +1,4 @@
-package com.treinamento.inicialAPI.Controller;
+ package com.treinamento.inicialAPI.Controller;
 
 import java.util.List;
 
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.treinamento.inicialAPI.domain.exception.EstadoNaoEncontradoException;
+import com.treinamento.inicialAPI.domain.exception.NegocioException;
 import com.treinamento.inicialAPI.domain.model.Cidade;
 import com.treinamento.inicialAPI.domain.model.repository.CidadeRepository;
 import com.treinamento.inicialAPI.domain.service.CadastroCidadeService;
@@ -42,15 +44,28 @@ public class CidadeController {
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cidade adicionar(@RequestBody Cidade cidade) {
-		return cadastroCidade.salvar(cidade);
+		
+		try {
+		
+			return cadastroCidade.salvar(cidade);
+		
+		}catch(EstadoNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
 	}
 	
-	@PutMapping("/{cidadeAtualizar}")
+	@PutMapping("/{cidadeId}")
 	public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
 		Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
-		
 		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-		return cidadeRepository.save(cidadeAtual);
+		
+		try {
+		
+			return cidadeRepository.save(cidadeAtual);
+		
+		}catch (EstadoNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage(), e);
+		}
 	} 
 
 	@DeleteMapping("/{cidadeId}")

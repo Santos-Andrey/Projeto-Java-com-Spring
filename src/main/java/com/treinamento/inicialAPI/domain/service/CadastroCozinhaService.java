@@ -5,18 +5,15 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.treinamento.inicialAPI.domain.exception.CozinhaNaoEncontradaException;
 import com.treinamento.inicialAPI.domain.exception.EntidadeEmUsoException;
-import com.treinamento.inicialAPI.domain.exception.EntidadeNaoEncontradaException;
 import com.treinamento.inicialAPI.domain.model.Cozinha;
 import com.treinamento.inicialAPI.domain.model.repository.CozinhaRepository;
 
 @Service
 public class CadastroCozinhaService {
 
-	private static final String COZINHA_EM_USO_MSG = 
-										"A entidade %d esta em uso!";
-	private static final String COZINHA_NÃO_ENCONTRADA_MSG
-										= "Entidade %d não encontrada";
+	private static final String COZINHA_EM_USO_MSG = "A entidade %d esta em uso!";
 	
 	@Autowired CozinhaRepository cozinhaRepository;
 
@@ -30,7 +27,7 @@ public class CadastroCozinhaService {
 		cozinhaRepository.deleteById(cozinhaId);
 		
 		}catch(EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException((String.format(COZINHA_NÃO_ENCONTRADA_MSG, cozinhaId)));
+			throw new CozinhaNaoEncontradaException((cozinhaId));
 		
 		}catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(String.format(COZINHA_EM_USO_MSG,cozinhaId));
@@ -39,7 +36,7 @@ public class CadastroCozinhaService {
 	
 	public Cozinha buscarOuFalhar(Long cozinhaId) {
 		return cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException((String.format(COZINHA_NÃO_ENCONTRADA_MSG, cozinhaId))));
+				.orElseThrow(() -> new CozinhaNaoEncontradaException(cozinhaId));
 	}
 	
 }
