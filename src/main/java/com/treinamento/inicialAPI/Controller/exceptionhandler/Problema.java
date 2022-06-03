@@ -2,6 +2,8 @@
 
 package com.treinamento.inicialAPI.Controller.exceptionhandler;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -17,5 +19,8 @@ public class Problema {
 	private String type;
 	private String title;
 	private String details;
+	
+	private String userMessage;
+	private LocalDate timeStamp;
 	
 	}

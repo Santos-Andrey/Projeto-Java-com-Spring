@@ -3,7 +3,7 @@ package com.treinamento.inicialAPI.Controller.exceptionhandler;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.PropertyAccessException;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +11,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
@@ -22,12 +23,37 @@ import com.treinamento.inicialAPI.domain.exception.NegocioException;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
+	private static final String MSG_ERROR_GENERICA_USUARIO_FINAL = "Ocorreu um erro interno inesperado no sistema."
+			+ "Tente novamente e se o problema persistir, entre em contato"
+			+ "com o administrador do sistema.";
+
+	public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request){
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		ProblemaTipo problemaTipo = ProblemaTipo.ERRO_DE_SISTEMA;
+		System.out.println(problemaTipo);
+		
+		String details = MSG_ERROR_GENERICA_USUARIO_FINAL;
+		
+		ex.printStackTrace();
+		
+		Problema problema = Problema.builder()
+				.details(details)
+				.title("Erro no Sistema")
+				.status(status.value())
+				.type("http://Apitreinamento.com.br/error-no-sistema")
+				.build();
+	
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+	}
+	
+
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> TratarEntidadeNaoEncontradoException(
 			EntidadeNaoEncontradaException ex, WebRequest request){
 		
 		HttpStatus status = HttpStatus.NOT_FOUND;
 		Problema problema = Problema.builder()
+				.userMessage(MSG_ERROR_GENERICA_USUARIO_FINAL)
 				.status(status.value())
 				.type("http://Apitreinamento.com.br/entidadenãoencontrada")
 				.title("Esta Entidade não foi encontrada!")
@@ -43,6 +69,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 			HttpStatus status = HttpStatus.CONFLICT;
 			Problema problema = Problema.builder()
+					.userMessage(MSG_ERROR_GENERICA_USUARIO_FINAL)
 					.status(status.value())
 					.type("http://Apitreinamento.com.br/EntidadeEmUso")
 					.title("Entidade em Uso")
@@ -58,6 +85,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 			HttpStatus status = HttpStatus.BAD_REQUEST;
 			Problema problema = Problema.builder()
+					.userMessage(MSG_ERROR_GENERICA_USUARIO_FINAL)
 					.status(status.value())
 					.type("http://Apitreinamento.com.br/NegocioException")
 					.title("NegocioException")
@@ -74,17 +102,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 			
 		if(body == null) {
 				body = Problema.builder()
+						.userMessage(MSG_ERROR_GENERICA_USUARIO_FINAL)
 						.status(status.value())
 						.title(status.getReasonPhrase())
 						.build();
+				
 		}else if( body instanceof String){
 			body = Problema.builder()
+					.userMessage(MSG_ERROR_GENERICA_USUARIO_FINAL)
 					.status(status.value())
 					.title((String)body)
 					.build();
 		}
 		return super.handleExceptionInternal(ex, body, headers, status, request);
-		
 	}
 	
 	@Override
@@ -99,9 +129,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 			//Desafio de Implementação da aula
 		}else if(rootCause instanceof PropertyBindingException) {
 			return handlePropertyBinding((InvalidFormatException) rootCause, headers, status, request);
+		
 		}
 		
 		Problema problema = Problema.builder()
+				.userMessage(MSG_ERROR_GENERICA_USUARIO_FINAL)
 				.type("http://Apitreinamento.com.br/Mensagem Incompreensivel")
 				.title("Mensagem Incompreensivel!")
 				.details("Consulta feita de forma incorreta, verifique error de sintaxe.")
@@ -111,7 +143,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 				status, request);
 	}
 	
-	
+
 	//Desafio de Implementação da aula
 	private ResponseEntity<Object> handlePropertyBinding(InvalidFormatException ex, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
@@ -124,6 +156,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 					+ "corrija ou remova e tente novamente", path);
 			
 			Problema problema = Problema.builder()
+					
+					//Mensagem caso o front da API queira passar para o usuário, uma mensagem legivel ao usuario
+					.userMessage(MSG_ERROR_GENERICA_USUARIO_FINAL)
 					.type("\"http://Apitreinamento.com.br/Propriedade-Invalida")
 					.title("Propriedade Invalida")
 					.details(details)
@@ -150,32 +185,49 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		//Builder do problema com as atribuições customizadas
 		Problema problema = Problema.builder()
+				.userMessage(MSG_ERROR_GENERICA_USUARIO_FINAL)
 				.type("http://Apitreinamento.com.br/Mensagem Incompreensivel")
 				.title("Mensagem Incompreensivel!")
 				.details(details)
 				.build();
 
 		return handleExceptionInternal(ex, problema, headers, status, request);
-	}
+		}
 	
-	
-	@SuppressWarnings("unused")
-	private ResponseEntity<Object> TratarParametroInvalido(PropertyAccessException ex, HttpHeaders headers,
+	@Override
+	protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
 			HttpStatus status, WebRequest request){
 		
-		String details = String.format("O parâmetro de URL '%s' recebeu valor '%s' que é de um tipo"
-				+ "invalido! Corrija e informe um valor compativel",
-				ex.getPropertyName(), ex.getValue());
+		if(ex instanceof MethodArgumentTypeMismatchException ) {
+			return handleMethodArgumentTypeMismatch((MethodArgumentTypeMismatchException)ex, headers, status, request);
+		}
+	
+			return super.handleTypeMismatch(ex, headers, status, request);
+	}
+	
+	private ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException
+			 ex, HttpHeaders headers, HttpStatus status, WebRequest request){
+		
+		ProblemaTipo problemaTipo = ProblemaTipo.PARAMETRO_INVALIDO;
+		System.out.println(problemaTipo);
+		
+		String details = String.format("O parametro de URL '%s' recebeu valor '%s'"
+				+ "que é invalido. Corrija e informe um valor do tipo '%s'",
+				ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
 		
 		Problema problema = Problema.builder()
-				.type("http://Apitreinamento.com.br/Parametro-Invalido")
-				.title("Parametro Invalido")
+				.userMessage(MSG_ERROR_GENERICA_USUARIO_FINAL)
+				.type("http://Apitreinamento.com.br/parametro-Invalido")
+				.title("parametro-Invalido!")
 				.details(details)
 				.build();
-	
 		
-		return handleExceptionInternal(ex, problema, headers, status, request);
+		return handleExceptionInternal(ex, problema, headers, status, request) ;
+		
 	}
-
 }
+		
+
+
+
 
