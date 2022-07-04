@@ -58,13 +58,12 @@ public class Restaurante {
 	
 	@Valid
 	@ConvertGroup(from = Default.class, to = com.treinamento.inicialAPI.core.Groups.CozinhaId.class) //Conversão de grupo de validação
-	@NotNull
-	@JsonIgnore					
+	@NotNull				
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Cozinha_id", nullable = false)
 	private Cozinha cozinha;
 	
-	@JsonIgnore
+
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = ("datetime"))
 	private LocalDateTime dataCadastro;
@@ -75,7 +74,7 @@ public class Restaurante {
 	private LocalDateTime dataAtualizacao;
 	
 	
-	@JsonIgnore
+	
 	@ManyToMany
 	@JoinTable(name = "Restaurante_forma_pagamento",
 	joinColumns = @JoinColumn(name = "restaurante_id"),
@@ -83,12 +82,10 @@ public class Restaurante {
 	private List<FormaPagamento> formasPagamento = new ArrayList<>();
 	
 	//Incorporação de classe @Embeddable e @Embedded
-	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
 	
 	@OneToMany 
-	@JsonIgnore
 	@JoinTable(name = "produtos")
 	private List<Produto> produto = new ArrayList<>();
 	

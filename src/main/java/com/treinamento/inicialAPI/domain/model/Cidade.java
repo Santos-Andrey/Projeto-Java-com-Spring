@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.treinamento.inicialAPI.core.Groups;
 
 import lombok.Data;
@@ -31,7 +30,6 @@ public class Cidade {
 	private Long Id;
 	
 	@NotBlank
-	@JsonProperty("Título")
 	@Column(nullable = false)
 	private String nome;
 	

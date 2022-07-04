@@ -2,6 +2,7 @@ package com.treinamento.inicialAPI.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.treinamento.inicialAPI.domain.exception.EntidadeEmUsoException;
 import com.treinamento.inicialAPI.domain.exception.RestauranteNaoEncontradoException;
@@ -20,6 +21,7 @@ public class CadastroRestauranteService {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinha;
 	
+	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		
@@ -30,6 +32,7 @@ public class CadastroRestauranteService {
 		return restauranteRepository.save(restaurante);
 	}
 	
+	@Transactional
 	public void Excluir(Long restauranteId){
 		try {
 			restauranteRepository.deleteById(restauranteId);
