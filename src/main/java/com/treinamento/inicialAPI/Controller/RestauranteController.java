@@ -2,6 +2,8 @@ package com.treinamento.inicialAPI.Controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,7 +47,7 @@ public class RestauranteController {
 	
 	@PostMapping("/{adicionar}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Restaurante adicionar(@RequestBody Restaurante restaurante){
+	public Restaurante adicionar(@RequestBody @Valid Restaurante restaurante){
 		
 		try {
 			return serviceRestaurante.salvar(restaurante);
@@ -55,7 +57,7 @@ public class RestauranteController {
 		}
 	}
 	@PutMapping("/{RestauranteId}")
-	public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante){
+	public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody @Valid Restaurante restaurante){
 		
 		Restaurante restauranteAtual = serviceRestaurante.buscarOuFalhar(restauranteId);
 		BeanUtils.copyProperties(restaurante, restauranteAtual, "id");

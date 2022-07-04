@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum ProblemaTipo {
 	
 	ERRO_DE_SISTEMA("/Error-inesperado-no-sistema", "Error Interno no Sistema"),
-	PARAMETRO_INVALIDO("/Parametro-Invalido", "Parametro Invalido!");
+	PARAMETRO_INVALIDO("/Parametro-Invalido", "Parametro Invalido!"),
+	DADOS_INVALIDOS("/Dados-Invalidos", "Dados Invalidos");
 	
 	private String title;
 	private String URI;

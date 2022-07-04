@@ -3,6 +3,7 @@
 package com.treinamento.inicialAPI.Controller.exceptionhandler;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -22,5 +23,16 @@ public class Problema {
 	
 	private String userMessage;
 	private LocalDate timeStamp;
+	
+	private List<Object> objects;
+	
+	@Getter
+	@Builder
+	public static class Object {
+		
+		private String nome;
+		private String UserMessage;
+	}
+	
 	
 	}
