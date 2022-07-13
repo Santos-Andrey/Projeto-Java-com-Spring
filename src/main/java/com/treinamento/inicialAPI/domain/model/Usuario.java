@@ -1,6 +1,6 @@
 package com.treinamento.inicialAPI.domain.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class Usuario {
 	
 	@CreationTimestamp
 	@JoinColumn(nullable = false, columnDefinition = "DateTime")
-	private LocalDateTime dataCadastro;
+	private OffsetDateTime dataCadastro;
 
 	
 	@ManyToMany

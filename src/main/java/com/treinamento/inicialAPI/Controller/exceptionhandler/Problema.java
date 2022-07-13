@@ -2,7 +2,7 @@
 
 package com.treinamento.inicialAPI.Controller.exceptionhandler;
 
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,7 +22,7 @@ public class Problema {
 	private String details;
 	
 	private String userMessage;
-	private LocalDate timeStamp;
+	private OffsetDateTime timeStamp;
 	
 	private List<Object> objects;
 	
